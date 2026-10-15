@@ -1,0 +1,148 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  COUNSELOR
+  STUDENT
+  FACULTY
+}
+
+enum AppointmentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  RESCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+enum ReferralStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  ADDRESSED
+  CLOSED
+}
+
+enum ConcernStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  firstName     String
+  lastName      String
+  role          Role
+  studentId     String?  @unique
+  department    String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  appointmentsAsStudent  Appointment[] @relation("StudentAppointments")
+  appointmentsAsCounselor Appointment[] @relation("CounselorAppointments")
+  sessionsAsStudent      Session[]     @relation("StudentSessions")
+  sessionsAsCounselor    Session[]     @relation("CounselorSessions")
+  referrals               Referral[]
+  concerns                Concern[]
+  announcementsCreated    Announcement[] @relation("AnnouncementCreator")
+  resourcesCreated       Resource[]    @relation("ResourceCreator")
+  notificationsReceived  Notification[]
+}
+
+model Appointment {
+  id           String            @id @default(cuid())
+  studentId    String
+  counselorId  String
+  scheduledAt  DateTime
+  purpose      String
+  notes        String?
+  status       AppointmentStatus @default(PENDING)
+  rejectionReason String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  student      User              @relation("StudentAppointments", fields: [studentId], references: [id])
+  counselor    User              @relation("CounselorAppointments", fields: [counselorId], references: [id])
+}
+
+model Session {
+  id          String   @id @default(cuid())
+  studentId   String
+  counselorId String
+  title       String
+  notes       String?
+  date        DateTime
+  createdAt   DateTime @default(now())
+
+  student     User     @relation("StudentSessions", fields: [studentId], references: [id])
+  counselor   User     @relation("CounselorSessions", fields: [counselorId], references: [id])
+}
+
+model Referral {
+  id          String         @id @default(cuid())
+  facultyId   String
+  studentName String
+  studentCourse String
+  reason      String
+  status      ReferralStatus @default(SUBMITTED)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  faculty     User           @relation(fields: [facultyId], references: [id])
+}
+
+model Concern {
+  id          String        @id @default(cuid())
+  studentId   String
+  category    String
+  title       String
+  description String
+  status      ConcernStatus @default(OPEN)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  student     User          @relation(fields: [studentId], references: [id])
+}
+
+model Announcement {
+  id          String   @id @default(cuid())
+  title       String
+  body        String
+  authorId    String
+  audience    String   @default("ALL")
+  createdAt   DateTime @default(now())
+
+  author      User     @relation("AnnouncementCreator", fields: [authorId], references: [id])
+}
+
+model Resource {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  url         String
+  authorId    String
+  createdAt   DateTime @default(now())
+
+  author      User     @relation("ResourceCreator", fields: [authorId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+}

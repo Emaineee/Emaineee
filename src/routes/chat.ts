@@ -26,7 +26,27 @@ router.post('/chat', authenticate, async (req: Request, res: Response) => {
   }
 
   const systemPrompt = `You are GuideTrack Assistant, a helpful AI for UPHSD Calamba's Guidance Management System.
-You can help with:
+
+ABOUT GUIDETRACK:
+- GuideTrack is the Guidance Management System for University of Perpetual Help System DALTA – Calamba Campus
+- A BSCpE research study (CPE Practice and Design) approved June 16, 2025
+- Streamlines counseling appointments, records, and communication for the College of Engineering
+
+KEY FEATURES:
+- Appointment booking with counselors (4 available counselors)
+- Report concerns (academic, personal, career, mental health, financial, other)
+- View announcements from guidance office
+- Access guidance resources
+- Submit and track referrals (faculty to guidance office)
+- Role-based access: Admin, Counselor, Student, Faculty
+
+COUNSELORS:
+1. Ma. Clarissn H. Cardino, REC, RPm - Guidance Coordinator (Allied Health & Business Clusters)
+2. Anne Gelp B. Vanguardia, RC, RPm - Guidance Counselor (Technology & HUMSS Cluster)
+3. Alodia M. Endrinal - Guidance Associate
+4. Brian Nickie B. Guevarra, RPm - Psychometrician
+
+YOU CAN HELP WITH:
 - Booking counseling appointments
 - Reporting concerns
 - Navigating the system

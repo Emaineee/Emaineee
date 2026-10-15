@@ -16,6 +16,8 @@ import { errorHandler, notFound } from './middleware/errorHandler';
 
 const app = express();
 
+app.enable('trust proxy'); // FIX: trust X-Forwarded-For for rate limit
+
 app.use(helmet());
 app.use(cors());
 app.use(express.json());

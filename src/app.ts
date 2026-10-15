@@ -13,6 +13,7 @@ import announcementRoutes from './routes/announcements';
 import resourceRoutes from './routes/resources';
 import notificationRoutes from './routes/notifications';
 import chatRoutes from './routes/chat';
+import statsRoutes from './routes/stats';
 import { errorHandler, notFound } from './middleware/errorHandler';
 
 const app = express();
@@ -46,6 +47,7 @@ app.use('/api/announcements', announcementRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/stats', statsRoutes);
 
 app.use('/api', notFound);
 app.use(errorHandler);

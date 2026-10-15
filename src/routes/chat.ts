@@ -65,8 +65,8 @@ Keep responses helpful, concise, and friendly.`;
       return res.status(500).json({ error: 'Chat service error' });
     }
 
-    const data = await response.json();
-    const reply = data.choices[0]?.message?.content || 'Sorry, I could not generate a response.';
+    const data = await response.json() as { choices?: Array<{ message?: { content?: string } }> };
+    const reply = data.choices?.[0]?.message?.content || 'Sorry, I could not generate a response.';
 
     res.json({ reply });
 

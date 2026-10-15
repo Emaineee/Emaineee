@@ -23,6 +23,15 @@ const toggleActiveSchema = z.object({
 
 const router = Router();
 
+router.get('/directory', authenticate, async (_req: Request, res: Response) => {
+  const counselors = await prisma.user.findMany({
+    where: { role: 'COUNSELOR', isActive: true },
+    select: { id: true, firstName: true, lastName: true, department: true },
+    orderBy: { firstName: 'asc' },
+  });
+  res.json(counselors);
+});
+
 router.use(authenticate, authorize('ADMIN'));
 
 router.get('/', async (_req: Request, res: Response) => {

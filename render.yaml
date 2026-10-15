@@ -3,7 +3,7 @@ services:
     name: guidetrack-api
     runtime: node
     plan: free
-    buildCommand: buildCommand: npm ci --include=dev && npx prisma migrate reset --force && npm run build && node prisma/seed.js
+    buildCommand: npm ci --include=dev && npx prisma migrate reset --force && npm run build && node prisma/seed.js
     startCommand: node dist/server.js
     healthCheckPath: /api/health
     envVars:
